@@ -8,12 +8,11 @@ import (
 	"os"
 )
 
+// Get data from API, return close prices in the past 60 minutes
 func getData() []float64 {
-	// Get data from API, return close price in the past 30 minutes
 	var f interface{}
 	listData := []float64{}
 
-	// Request from API, get response
 	resp, err := http.Get("https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=60")
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -33,15 +32,16 @@ func getData() []float64 {
 		x := object.(map[string]interface{})
 		minutePrice := x["close"].(float64)
 		listData = append(listData, minutePrice)
-
 	}
 
 	return listData
 }
 
+// Analyze data and check if the price has big change in the last 10 minutes compare to last 60-10 minute
 func checkData(listData []float64) {
 	last10Data := listData[50:]
 	last50Data := listData[:50]
+
 	maxLast10 := max(last10Data)
 	minLast10 := min(last10Data)
 	differencelast10 := maxLast10 - minLast10
@@ -68,9 +68,10 @@ func checkData(listData []float64) {
 
 }
 
-func min(array []float64) float64 {
-	min := array[0]
-	for _, j := range array {
+// find min value of a slice
+func min(dataSlice []float64) float64 {
+	min := dataSlice[0]
+	for _, j := range dataSlice {
 		if j < min {
 			min = j
 		}
@@ -78,9 +79,10 @@ func min(array []float64) float64 {
 	return min
 }
 
-func max(array []float64) float64 {
-	max := array[0]
-	for _, j := range array {
+// find max value of a slice
+func max(dataSlice []float64) float64 {
+	max := dataSlice[0]
+	for _, j := range dataSlice {
 		if j > max {
 			max = j
 		}

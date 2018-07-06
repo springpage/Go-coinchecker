@@ -15,22 +15,25 @@ func main() {
 	listData = getData()
 	go render()
 
+	// Loop, get data and check every 5 minutes
 	for i := 1; i < 1000; i++ {
 		time.Sleep(5 * time.Minute)
 		fmt.Println("Check at time ", i)
 		listData = getData()
 		checkData(listData)
-
 	}
-
 }
 
+// Make chart available at localhost:8080
 func render() {
 	http.HandleFunc("/", drawChart)
 	http.ListenAndServe(":8080", nil)
 }
 
+//Draw chart with retrieved data
 func drawChart(res http.ResponseWriter, req *http.Request) {
+
+	// create slice [1..60] for the x-axis of the chart
 
 	arrayTime := []float64{}
 	for i := 1; i <= 61; i++ {
